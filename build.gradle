@@ -1,0 +1,59 @@
+buildscript{
+    repositories {
+        mavenCentral()
+    }
+}
+allprojects{
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version 'v0.1.0'
+group 'com.github.sauravrao637'
+repositories {
+    mavenCentral()
+}
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+}
+dependencies{
+    // Use JUnit test framework.
+    testImplementation 'junit:junit:4.13.1'
+
+    // This dependency is exported to consumers, that is to say found on their compile classpath.
+    api 'org.apache.commons:commons-math3:3.6.1'
+
+    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    implementation 'com.google.guava:guava:30.0-jre'
+    
+}
+
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            myPublication(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+            }
+        }
+        repositories {
+        }
+    }
+}
